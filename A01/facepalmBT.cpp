@@ -32,11 +32,9 @@ int main() {
 
     int ppl, con;
     cin >> ppl >> con;
-    graph.resize(ppl);
-    dist.resize(ppl);
-    while (!places.empty()) {
-      places.pop();
-    }
+    graph=vector <vector<int>> (ppl);
+    dist = vector<int> (ppl);
+    places = queue <int> ();
 
     for (int i = 0; i < con; i++) {
       int tmp1, tmp2;
@@ -78,6 +76,7 @@ int main() {
       for(int i=0;i<ppl;i++) {
         if(dist[i]==-1) {
           places.push(i);
+          dist[i]=0;
           break;
         }
       }
