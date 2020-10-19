@@ -7,10 +7,11 @@ struct para {
   int y;
 };
 
+struct DONE {};
+
 vector <vector<int>> graph;
 queue <para> BFSq;
 vector<vector<int>> dist;
-bool done;
 int exitdist;
 
 void BFS (para place) {
@@ -30,12 +31,47 @@ void BFS (para place) {
       dist[i.x][i.y]=dist[place.x][place.y]+1;
     } else if (graph[i.x][i.y]==2&&dist[i.x][i.y]!=-1) {
       exitdist=dist[place.x][place.y]+1;
-      done=true;
+      throw DONE();
     }
   }
   return;
 }
 
+void getData (int height, int width) {
+  para temppara;
+  for(int i=0;i<height;i++) {
+    string tmp1;
+    cin >> tmp1;
+    for(int j=0;j<width;j++) {
+      char tmp2;
+      tmp2=tmp1[j];
+      if (tmp2=='.'||tmp2=='+') {
+        graph[i].push_back(1);
+        dist[i].push_back(-1);
+      } else if (tmp2=='@') {
+        temppara.x=i;
+        temppara.y=j;
+        BFSq.push(temppara);
+        dist[i].push_back(0);
+        graph[i].push_back(1);
+      } else if (tmp2=='#') {
+        graph[i].push_back(0);
+        dist[i].push_back(-1);
+      } else if (tmp2=='>') {
+        graph[i].push_back(2);
+        dist[i].push_back(-1);
+      }
+    }
+  }
+}
+
+void zero (int height,int width) {
+  graph = vector<vector<int>> (height);
+  BFSq=queue<para> ();
+  dist = vector<vector<int>> (height);
+
+  exitdist=0;
+}
 
 int main () {
   int z;
@@ -43,37 +79,10 @@ int main () {
   while  (z--) {
     int height,width;
     cin>>height>>width;
-    graph = vector<vector<int>> (height);
-    BFSq=queue<para> ();
-    dist = vector<vector<int>> (height);
-    para temppara;
-    exitdist=0;
-    done=false;
 
-    for(int i=0;i<height;i++) {
-      string tmp1;
-      cin >> tmp1;
-      for(int j=0;j<width;j++) {
-        char tmp2;
-        tmp2=tmp1[j];
-        if (tmp2=='.'||tmp2=='+') {
-          graph[i].push_back(1);
-          dist[i].push_back(-1);
-        } else if (tmp2=='@') {
-          temppara.x=i;
-          temppara.y=j;
-          BFSq.push(temppara);
-          dist[i].push_back(0);
-          graph[i].push_back(1);
-        } else if (tmp2=='#') {
-          graph[i].push_back(0);
-          dist[i].push_back(-1);
-        } else if (tmp2=='>') {
-          graph[i].push_back(2);
-          dist[i].push_back(-1);
-        }
-      }
-    }
+    zero(height,width);
+    getData(height,width);
+
 
     /*cout<<endl;
     for(int i=0;i<height;i++) {
@@ -94,10 +103,13 @@ int main () {
     while (!BFSq.empty()) {
       para temp=BFSq.front();
       BFSq.pop();
-      BFS(temp);
+      try {
+        BFS(temp);
+      } catch (DONE) {
+        cout << exitdist << endl;
+      }
     }
 
-    cout<<exitdist;
 
   }
   return 0;
