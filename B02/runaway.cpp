@@ -22,17 +22,14 @@ int main () {
 	while(Z--) {
 		int rooms,tunnels;
 		cin>>rooms>>tunnels;
-		dist = vector <int> (rooms);
+		dist = vector <int> (rooms,INT_MAX);
 		vector <vector <edge>>neighb(rooms);
 		bool processed[rooms]={false};
-		
+
 		for(int i=0;i<tunnels;i++) {
 			int src,dest,cost;
 			cin>>src>>dest>>cost;
 			neighb[--src].push_back({--dest,cost});
-		}		
-		for(int i=1;i<rooms;i++) {
-			dist[i]=INT_MAX;
 		}
 		dist[0]=0;
 
@@ -53,7 +50,7 @@ int main () {
 						}
 						DijksQ.push({temp.dest});
 						//cout<<"pushing: "<<temp.dest<<endl;
-					}	
+					}
 				}
 			}
 		}
@@ -63,6 +60,6 @@ int main () {
 		} else {
 			cout<<"BRAK\n";
 		}
-		
+
 	}
 }
